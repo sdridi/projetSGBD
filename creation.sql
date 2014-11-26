@@ -130,6 +130,14 @@ foreign key (id_promo_catalogue) references promo_catalogue(id_promo_catalogue),
 foreign key (id_catalogue) references catalogue(id_catalogue)
 );
 
+create table if not exists admin(
+id_admin int primary key auto_increment,
+username varchar(64) unique not null,
+droits tinyint not null,
+mdp varchar(64) not null,
+mail varchar(64) unique not null
+);
+
 /* Creation des triggers */
 
 /* Creation des vues */
