@@ -89,6 +89,47 @@ create table if not exists avis(
        check (note <= 5), 
        check (dateAvis <= now()));
 
+create table if not exists reduction(
+ id_reduction int primary key auto_increment,
+ date_debut date not null,
+ date_fin date not null,check (dateFin >= dateDebut),
+ montant float not null, check (montant >= 0),
+ seuil float, check (seuil >= 0),
+ type tinyint unsigned not null);
+
+create table if not exists promo_produit(
+id_promo_produit int primary key,
+foreign key(id_promo_produit) references reduction(id_reduction)
+);
+
+create table if not exists promo_catalogue(
+id_promo_catalogue int primary key,
+foreign key(id_promo_catalogue) references reduction(id_reduction)
+);
+
+create table if not exists bon_reduction(
+id_bon_reduction int primary key,
+id_commande int, 
+foreign key(id_bon_reduction) references reduction(id_reduction),
+foreign key(id_commande) references commande(id_commande)
+);
+
+create table if not exists concerne_promo_produit(
+id_promo_produit int ,
+id_produit int ,
+primary key(id_produit,id_promo_produit),
+foreign key (id_promo_produit) references promo_produit(id_promo_produit),
+foreign key (id_produit) references produit(id_produit)
+);
+
+create table if not exists concerne_promo_catalogue(
+id_promo_catalogue int ,
+id_catalogue int ,
+primary key(id_catalogue,id_promo_catalogue),
+foreign key (id_promo_catalogue) references promo_catalogue(id_promo_catalogue),
+foreign key (id_catalogue) references catalogue(id_catalogue)
+);
+
 /* Creation des triggers */
 
 /* Creation des vues */
