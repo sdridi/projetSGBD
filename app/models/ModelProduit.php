@@ -10,6 +10,7 @@
 			{
 				$this->_db = Db::init();
 				$table = "produit";
+				//echo $table;
 			}				
 
 
@@ -18,7 +19,6 @@
         echo "bonjour";
     } 
 
-     
 
 
     public function delete($reference){
