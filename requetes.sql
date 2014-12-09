@@ -65,4 +65,52 @@ begin
 	delete from produit where id_produit = ref;
 end $$
 
+/************** CATALOGUES **************/
+
+create procedure get_catalogue (IN ref int)
+begin
+	select * from catalogue where id_catalogue = ref;
+end $$
+
+create procedure get_produit_from_catalogue (IN ref int)
+begin
+	select * from catalogue natural join reference
+		      		natural join produit
+		 where id_catalogue = ref;
+end $$
+
+create procedure create_catalogue (IN name varchar(64))
+begin
+	insert into catalogue(nom, dateMAJ) values (name, now());
+end $$
+
+/* Met à jour le nom d'un catalogue */
+create procedure update_catalogue (IN id int, 
+       		 		   IN name varchar(64))
+begin
+	update catalogue set nom = name, 
+	       		     dateMAJ = now
+			 where id_catalogue = id;
+end $$
+
+
+create procedure delete_catalogue (IN id int)
+begin
+	delete from catalogue where id_catalogue = id;
+end $$
+
+create procedure add_to_catalogue (IN id_catalog int, 
+       		 		   IN id_prod int)
+begin
+	insert into reference (id_produit, id_catalogue) values (id_prod, id_catalog);
+	update catalogue set dateMAJ = now();
+end $$
+
+create procedure delete_from_catalogue (IN id_catalog int, 
+		       		        IN id_prod int)
+begin
+	delete from reference where id_catalogue = id_catalog
+	       	    	      and id_produit = id_prod;
+end $$
+
 delimiter ;
