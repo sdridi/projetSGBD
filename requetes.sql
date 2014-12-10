@@ -375,38 +375,122 @@ create procedure validate_commande (IN ref_membre int,
        		 		    IN dateLivr date, 
 				    IN adrLivr varchar(64), 
 				    IN fdp int unsigned, 
-				    IN id_ville_membre int)
+				    IN id_ville_membre int, 
+				    IN id_bon int)
 begin
 	/*Creation de la commande*/
 	insert into commande(dateValidation, dateLivraison, adrLivraison, fraisDePort, id_ville, id_membre)
 	       	    values (now(), dateLivr, adrLivr, fdp, id_ville_membre, ref_membre);
 	
-
-	/*Recuperation de l'id de la commande*/
-	select id_commande into @id_command from commande where id_membre = ref_membre order by 1 desc limit 1;
-	
 	/*Transfert du panier vers la commande*/
 	insert into contenir(id_commande, id_produit, quantite, PUCommande)
-	       	    select @id_command, id_produit, quantite, prix 
+	       	    select LAST_INSERT_ID(), id_produit, quantite, prix 
 		    from panier natural join produit
 		    where id_membre = ref_membre;
 
 	/* Mise à jour des quantités */
-	call update_quantite_commande(@id_command, ref_membre);
+	call update_quantite_commande(LAST_INSERT_ID(), ref_membre);
 
 	/*Vidage du panier*/
 	call empty_panier(ref_membre);
+
+	/* Application du bon de reduction */
+	if (id_bon_reduction <> null) then
+	   update bon_reduction set id_commande = LAST_INSERT_ID() where id_bon_reduction = id_bon;
+	end if;
 end $$
 
 /************** AVIS **************/
-/*get_avis
-add_avis
-delete_avis*/
+create procedure get_avis (IN ref_produit int)
+begin
+	select note, commentaire, dateAvis, nom, prenom
+	from avis natural join membre
+	where id_produit = ref_produit;
+end $$
 
+create procedure add_avis (IN ref_produit int, 
+       		 	   IN ref_membre int, 
+			   IN note_avis tinyint unsigned, 
+			   IN commentaire_avis text)
+begin
+	insert into avis(id_produit, id_membre, note, commentaire, dateAvis)
+	       	    values (ref_produit, ref_membre, note_avis, commentaire_avis, now());
+end $$
+
+create procedure delete_avis (IN ref_produit int, 
+       		 	      IN ref_membre int)
+begin
+	delete from avis where id_produit = ref_produit and id_membre = ref_membre;
+end $$
 
 /************** REDUCTIONS & PROMOS **************/
-/*get_promo
-create_promo
-delete_promo*/
+create procedure get_promo_produit (IN ref_promo int)
+begin
+	select * 
+	from promo_produit left join reduction on promo_produit.id_promo_produit = id_reduction
+	where id_promo_produit = ref_promo;
+end $$
 
+create procedure get_promo_catalogue (IN ref_promo int)
+begin
+	select * 
+	from promo_catalogue left join reduction on promo_catalogue.id_promo_catalogue = id_reduction
+	where id_promo_catalogue = ref_promo;
+end $$
+
+create procedure get_bon_reduction (IN ref_bon int)
+begin
+	select * 
+	from bon_reduction left join reduction on bon_reduction.id_bon_reduction = id_reduction
+	where id_bon_reduction = ref_bon;
+end $$
+
+create procedure create_reduction (IN date_debut_promo date, 
+       		 		   IN date_fin_promo date, 
+			       	   IN montant_promo float, 
+				   IN seuil_promo float, 
+				   IN type_promo tinyint unsigned)
+begin 
+	insert into reduction(date_debut, date_fin, montant, seuil, type)
+	       	    values(date_debut_promo, date_fin_promo, montant_promo, seuil_promo, type_promo);      
+end $$
+
+create procedure create_promo_produit (IN date_debut_promo date, 
+       		 		       IN date_fin_promo date, 
+				       IN montant_promo float, 
+				       IN seuil_promo float, 
+				       IN type_promo tinyint unsigned, 
+				       IN ref_produit int)
+begin
+	call create_reduction(date_debut_promo, date_fin_promo, montant_promo, seuil_promo, type_promo);
+	insert into promo_produit(id_promo_produit) values(LAST_INSERT_ID());
+	insert into concerne_promo_produit(id_promo_produit, id_produit)
+	       	    values (LAST_INSERT_ID(), ref_produit);
+end $$
+
+create procedure create_promo_catalogue (IN date_debut_promo date, 
+       		 		       IN date_fin_promo date, 
+				       IN montant_promo float, 
+				       IN seuil_promo float, 
+				       IN type_promo tinyint unsigned, 
+				       IN ref_catalogue int)
+begin
+	call create_reduction(date_debut_promo, date_fin_promo, montant_promo, seuil_promo, type_promo);
+	insert into promo_catalogue(id_promo_catalogue) values(LAST_INSERT_ID());
+	insert into concerne_promo_catalogue(id_promo_catalogue, id_catalogue)
+	       	    values (LAST_INSERT_ID(), ref_catalogue);
+end $$
+
+create procedure create_bon_reduction (IN date_debut_bon date, 
+       		 		       IN date_fin_bon date, 
+				       IN montant_bon float, 
+				       IN seuil_bon float, 
+				       IN type_bon tinyint unsigned)
+begin
+	call create_reduction(date_debut_bon, date_fin_bon, montant_bon, seuil_bon, type_bon);
+	insert into bon_reduction(id_bon_reduction) values(LAST_INSERT_ID());
+end $$
+/*
+create_promo
+*/
 delimiter ;

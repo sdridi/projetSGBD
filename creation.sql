@@ -61,7 +61,7 @@ create table if not exists commande(
        dateLivraison date not null, 
        adrLivraison varchar(64),
        fraisDePort int unsigned not null,
-       id_ville int not null,
+       id_ville int,
        id_membre int not null, 
        foreign key (id_ville) references ville(id_ville),
        foreign key (id_membre) references membre(id_membre), 
@@ -90,12 +90,12 @@ create table if not exists avis(
        check (dateAvis <= now()));
 
 create table if not exists reduction(
- id_reduction int primary key auto_increment,
- date_debut date not null,
- date_fin date not null,check (dateFin >= dateDebut),
- montant float not null, check (montant >= 0),
- seuil float, check (seuil >= 0),
- type tinyint unsigned not null);
+       id_reduction int primary key auto_increment,
+       date_debut date not null,
+       date_fin date not null,check (dateFin >= dateDebut),
+       montant float not null, check (montant >= 0),
+       seuil float, check (seuil >= 0),
+       type tinyint unsigned not null);
 
 create table if not exists promo_produit(
 id_promo_produit int primary key,
@@ -138,8 +138,12 @@ mdp varchar(64) not null,
 mail varchar(64) unique not null
 );
 
-/* Creation des triggers */
-
 /* Creation des vues */
 
-/* Creation des index */
+/* Vue associant à tous les produits l'ensemble des promos de catalogue qui s'y appliquent */
+create view produit_promo_catalogue as
+       select id_produit, id_promo_catalogue, date_debut, date_fin
+       from reference natural join catalogue
+       	    	      natural join concerne_promo_catalogue
+		      natural join promo_catalogue
+		      natural join reduction;
