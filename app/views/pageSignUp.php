@@ -40,7 +40,7 @@
         
 <div class="col-md-9">
                 
-        <form method="post" action="traitement.php">
+        <form method="post" action="../controllers/ControllerMember.php">
             <p>
                  <br />
                 <label>First name</label> : <input type="text" name="firstname" required/>
@@ -49,13 +49,13 @@
                 <br />
                 <label>Adress</label> : <input type="text" name="adress" required/>
                 <br />
-                <label>City</label> : <input type="text" name="username" required/>
+                <label>City</label> : <input type="text" name="city" required/>
                 <br />
-                <label>Postal code</label> : <input type="text" name="username" required/>
+                <label>Postal code</label> : <input type="text" name="pcode" required/>
                 <br />
-                <label>Email</label> : <input type="email" name="username" required/>
+                <label>Email</label> : <input type="email" name="email" required/>
                 <br />
-                <label>Tel</label> : <input type="tel" name="username" required/>
+                <label>Tel</label> : <input type="number" name="tel" required/>
                 <br />
                 <label>Password</label> : <input type="password" name="pass" required/>
                 <br />
