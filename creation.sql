@@ -25,8 +25,8 @@ create table if not exists reference(
        id_catalogue int, 
        id_produit int,
        primary key(id_catalogue, id_produit),
-       foreign key (id_catalogue) references catalogue(id_catalogue), 
-       foreign key (id_produit) references produit(id_produit));
+       foreign key (id_catalogue) references catalogue(id_catalogue) on delete cascade, 
+       foreign key (id_produit) references produit(id_produit) on delete cascade);
 
 create table if not exists ville(
        id_ville int primary key auto_increment, 
@@ -51,8 +51,8 @@ create table if not exists panier(
        id_produit int,
        quantite int unsigned not null,
        primary key(id_membre, id_produit),
-       foreign key (id_membre) references membre(id_membre), 
-       foreign key (id_produit) references produit(id_produit),
+       foreign key (id_membre) references membre(id_membre) on delete cascade, 
+       foreign key (id_produit) references produit(id_produit) on delete cascade,
        check (quantite > 0));
 
 create table if not exists commande(
@@ -64,7 +64,7 @@ create table if not exists commande(
        id_ville int,
        id_membre int not null, 
        foreign key (id_ville) references ville(id_ville),
-       foreign key (id_membre) references membre(id_membre), 
+       foreign key (id_membre) references membre(id_membre) on delete cascade, 
        check (dateValidation <= now()),
        check (dateValidation <= dateLivraison));
 
@@ -74,8 +74,8 @@ create table if not exists contenir(
        quantite int unsigned not null, 
        PUCommande int unsigned not null, 
        primary key (id_commande, id_produit), 
-       foreign key (id_commande) references commande(id_commande), 
-       foreign key (id_produit) references produit(id_produit));
+       foreign key (id_commande) references commande(id_commande) on delete cascade, 
+       foreign key (id_produit) references produit(id_produit) on delete cascade);
 
 create table if not exists avis(
        id_membre int, 
@@ -84,8 +84,8 @@ create table if not exists avis(
        commentaire text, 
        dateAvis date not null, 
        primary key (id_membre, id_produit), 
-       foreign key (id_membre) references membre(id_membre), 
-       foreign key (id_produit) references produit(id_produit),
+       foreign key (id_membre) references membre(id_membre) on delete cascade, 
+       foreign key (id_produit) references produit(id_produit) on delete cascade,
        check (note <= 5), 
        check (dateAvis <= now()));
 
@@ -98,45 +98,39 @@ create table if not exists reduction(
        type tinyint unsigned not null);
 
 create table if not exists promo_produit(
-id_promo_produit int primary key,
-foreign key(id_promo_produit) references reduction(id_reduction)
-);
+       id_promo_produit int primary key,
+       foreign key(id_promo_produit) references reduction(id_reduction) on delete cascade);
 
 create table if not exists promo_catalogue(
-id_promo_catalogue int primary key,
-foreign key(id_promo_catalogue) references reduction(id_reduction)
-);
+       id_promo_catalogue int primary key,
+       foreign key(id_promo_catalogue) references reduction(id_reduction) on delete cascade);
 
 create table if not exists bon_reduction(
-id_bon_reduction int primary key,
-id_commande int, 
-foreign key(id_bon_reduction) references reduction(id_reduction),
-foreign key(id_commande) references commande(id_commande)
-);
+       id_bon_reduction int primary key,
+       id_commande int, 
+       foreign key(id_bon_reduction) references reduction(id_reduction) on delete cascade,
+       foreign key(id_commande) references commande(id_commande) on delete cascade);
 
 create table if not exists concerne_promo_produit(
-id_promo_produit int ,
-id_produit int ,
-primary key(id_produit,id_promo_produit),
-foreign key (id_promo_produit) references promo_produit(id_promo_produit),
-foreign key (id_produit) references produit(id_produit)
-);
+       id_promo_produit int ,
+       id_produit int ,
+       primary key(id_produit,id_promo_produit),
+       foreign key (id_promo_produit) references promo_produit(id_promo_produit) on delete cascade,
+       foreign key (id_produit) references produit(id_produit) on delete cascade);
 
 create table if not exists concerne_promo_catalogue(
-id_promo_catalogue int ,
-id_catalogue int ,
-primary key(id_catalogue,id_promo_catalogue),
-foreign key (id_promo_catalogue) references promo_catalogue(id_promo_catalogue),
-foreign key (id_catalogue) references catalogue(id_catalogue)
-);
+       id_promo_catalogue int ,
+       id_catalogue int ,
+       primary key(id_catalogue,id_promo_catalogue),
+       foreign key (id_promo_catalogue) references promo_catalogue(id_promo_catalogue)on delete cascade,
+       foreign key (id_catalogue) references catalogue(id_catalogue) on delete cascade);
 
 create table if not exists admin(
-id_admin int primary key auto_increment,
-username varchar(64) unique not null,
-droits tinyint not null,
-mdp varchar(64) not null,
-mail varchar(64) unique not null
-);
+       id_admin int primary key auto_increment,
+       username varchar(64) unique not null,
+       droits tinyint not null,
+       mdp varchar(64) not null,
+       mail varchar(64) unique not null);
 
 /* Creation des vues */
 

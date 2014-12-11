@@ -12,6 +12,11 @@ begin
 	SELECT * FROM produit WHERE id_produit = ref;
 end $$
 
+create procedure is_produit_en_vente(IN ref int)
+begin
+	select enVente from produit where id_produit = ref;
+end $$
+
 create procedure add_produit (IN desi varchar(64),
        		 	      IN descri text,
 			      IN qte int unsigned, 
