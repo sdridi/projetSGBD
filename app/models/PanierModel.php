@@ -17,9 +17,7 @@
 		}
 		
 		public function addToPanier(){
-			$sql="INSERT INTO 
-			panier(id_membre, id_produit, quantite) 
-			VALUES (?, ?, ?)";
+			$sql="call add_to_panier(?, ?, ?)";
 
 			$data = array(
 				$this->id_membre,
@@ -31,21 +29,17 @@
 		}
 		
 		public function deleteFromPanier(){
-			$sql= "DELETE FROM 
-					panier
-				   WHERE id_produit = ?, id_membre = ?";
+			$sql= "call delete_from_panier(?, ?)";
 			$data = array(
-				$this->id_produit,
-				$this->id_membre
+				$this->id_membre,
+				$this->id_produit
 				);
 			$sth = $this->_db->prepare($sql);
 			$sth->execute($data);		
 		}
 
 		public function deletePanier(){
-			$sql= "DELETE FROM 
-					panier
-				   WHERE id_membre = ?";
+			$sql= "call ";
 			$data = array(
 				$this->id_membre
 				);
@@ -53,28 +47,20 @@
 			$sth->execute($data);		
 		}
 
-		public function changeQuantityProduit($newQantity){
-			$sql= "UPDATE 
-						`panier`
-				  SET 
-				  		`quantite`='$newQuantity' 
-				  WHERE 
-				  		`id_produit`=?";
+		public function changeQuantityProduit($newQuantity){
+			$sql= "call update_quantite_panier(?, ?, ?)";
 
 			$data = array(
+				$this->id_membre
 				$this->id_produit
+				$newQuantity
 				);	  		
 			$sth = $this->_db->prepare($sql);
 			$sth->execute($data);		
 		}
 
 		public function getPanier(){
-			$sql = "SELECT 
-			id_produit, quantite 
-			FROM 
-			`panier` 
-			WHERE 
-			id_membre = ?";
+			$sql = "call get_panier(?)";
 			
 			$this->_setSql($sql);
 			$result = $this->getRow(array($this->id_membre));

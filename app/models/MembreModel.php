@@ -70,10 +70,7 @@
 
 		public function add($NomCatalogue){
 
-			$sql = "INSERT INTO membre 
-			(nom, prenom, adresse, mail, tel, mdp, id_ville)
-			VALUES 
-			(?, ?, ?, ?, ?, ?, ?)";
+			$sql = "call create_membre (?, ?, ?, ?, ?, ?, ?)";
 
 			$data = array(
 				$this->nom,
@@ -142,11 +139,7 @@
 
 		public function delete($id){
 		//supprimer le produit de la base
-			$sql= "DELETE FROM
-						`produit`
-				
-				  WHERE 
-				  		`designation`=?";
+			$sql= "call delete_membre(?)";
 
 			$this->_setSql($sql);
 			$this->deleteM(array($id));
