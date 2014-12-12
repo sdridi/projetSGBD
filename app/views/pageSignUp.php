@@ -40,7 +40,7 @@
         
 <div class="col-md-9">
                 
-        <form method="post" action="../controllers/ControllerMember.php">
+        <form method="post" action="../views/index.php?p=ControllerMember&action=addProcess">
             <p>
                  <br />
                 <label>First name</label> : <input type="text" name="firstname" required/>

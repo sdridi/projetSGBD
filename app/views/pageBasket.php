@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Sign up </title>
+    <title>Basket </title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
@@ -28,9 +28,8 @@
 
 <body>
 
+<?php require_once("../models/ProduitModel.php"); ?>
 
-
-<?php echo $panier['MemberId']; ?>
     <!-- Navigation -->
     <?php include("navBar.php"); ?>
 
@@ -49,9 +48,9 @@
                             <img src="http://placehold.it/320x150" alt="">
                             <div class="caption">
                                 <h4 class="pull-right">$64.99</h4>
-                                <h4><a href="pageProduit.php">'.$panier['tbp'][i].designation.'</a>
+                                <h4><a href="index.php?p=ControlleurProduit&action=product&id='.$panier['TabProduit'][$i]->getIdProduit().'">'.$panier['TabProduit'][$i]->getDesignation().'</a>
                                 </h4>
-                                <p>This is a short description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                                <p>'.$panier['TabProduit'][$i]->getDescriptif().'</p>
                             </div>
                             <div class="ratings">
                                 <p class="pull-right">12 reviews</p>

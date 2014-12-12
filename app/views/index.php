@@ -1,12 +1,31 @@
 <?php
-	$params = explode('/',$_GET['p']);
-	$controller = $params[0];
-	$action = isset($params[1]) ? $params[1] : 'index';
+
+	if(isset($_GET['p']))
+		$params = $_GET['p'];
+	else
+		$params = 'ControllerMember';
+
+	if(isset($_GET['action']))
+		$action = $_GET['action'];
+	else
+		$action = 'index';
+		
+	$id = 0;
+	if(isset($_GET['id']))
+		$id = $_GET['id'];
+	$controller = $params;
 	
+
 	require('../controllers/'.$controller.'.php');
 	$controller = new $controller();
 	if(method_exists($controller,$action))
-		$controller->$action();
+		{
+			if(isset($id)){
+				$controller->$action($id);}
+			else
+				$controller->$action();
+		}
+
 	else 
 		echo("erreur 404");
 ?>

@@ -25,7 +25,7 @@
                     <a href="#">Contact</a>
                 </li>
                 <li>
-                    <a href="pageLogIn.php">Log In</a>
+                    <a href="index.php?p=ControllerMember&action=LogIn">Log In</a>
                 </li>
             </ul>
         </div>
