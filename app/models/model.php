@@ -24,7 +24,6 @@ class Model
         }
         
         $sth = $this->_db->prepare($this->_sql);
-        //var_dump($_sql);
         $sth->execute($data);
         return $sth->fetchAll();
     }

@@ -25,22 +25,19 @@
 			if($ref){
 				$this->setIdProduit($ref);
 				$data = $this->getDetailsProduit();
-
-				$this->setDesignation($data["designation"]);
-			    $this->setDescriptif($data["descriptif"]);
-				$this->setQuantite(intval($data["quantite"]));
-				$this->setPrix(floatval($data["prix"]));
-				$this->setPhoto($data["photo"]);
-				$this->setenVente(boolval($data["enVente"]));
+				
+				$this->setDesignation($data[1]);
+			    $this->setDescriptif($data[2]);
+				$this->setQuantite($data[3]);
+				$this->setPrix($data[4]);
+				$this->setPhoto($data[5]);
+				$this->setenVente($data[6]);
 				
 				}		
 		}
 
 		public function add(){
-			$sql = "INSERT INTO produit 
-			(designation, descriptif, quantite, prix, photo, enVente)
-			VALUES 
-			(?, ?, ?, ?, ?, ?)";
+			$sql = "call add_produit(?, ?, ?, ?, ?, ?)";
 
 			$data = array(
 				$this->designation,
@@ -60,54 +57,49 @@
 			$id_produit=$this->getIdProduitByDesignation();
 			$this->catalogue->setNom($NomCatalogue);
 			$this->catalogue->addProduitToCatalogue($id_produit);
-			//print("add success"); //a supprimer aprés, juste pour tester
 			
 		}
 		
-		public function getProduitRestant(){
-			$sql="SELECT 
-					*
-			FROM 
-					`Produit`  
-			WHERE 
-					`quantite` > 0";
-			
+		public function getProduitsRestant(){
+			$sql = "call produit_restant()";
 			$this->_setSql($sql);
 			$result= $this->getAll();
-			return $result;
+			
+			$arr = array(); 
+
+			for ($i=0; $i < count($result); $i++) { 
+				$arr[$i]=intval($result[$i]['id_produit']);
+
+			}	
+			return $arr;
+			
+		
 		}
 
 		public function getCataloguesProduit(){   //renvoie les id de tous les catalogues dans lesquels apparait le produit
 
-			$sql="SELECT 
-			id_catalogue
-			FROM 
-				produit NATURAL JOIN reference NATURAL JOIN catalogue 
-			where 
-			id_produit= ?";
+			$sql="call get_catalogue_produit(?)";
 
 			$this->_setSql($sql);
 			$result = $this->getRow(array($this->id_produit));
+			var_dump($this->id_produit);
 
 			if (empty($result))
 			{
 				return false;
 			}
 
-			return $result;
+			$arr = array(); 
+			for ($i=0; $i < count($result); $i++) { 
+					$arr[$i]=intval($result[$i]['id_catalogue']);
+			}	
+			return $arr;
+			
 		}
-
-		
 
 		public function getDetailsProduit(){
 
-			$sql="SELECT 
-			*
-			FROM 
-				`produit`  
-			WHERE 
-			`id_produit`= ?";
-
+			$sql="call get_produit(?)";
 			$this->_setSql($sql);
 			$result = $this->getRow(array($this->id_produit));
 			
@@ -115,80 +107,58 @@
 			{
 				return false;
 			}
-
-			return $result;
-		}
-
-		public function getIdProduitByDesignation(){
-
-			$sql="SELECT 
-			id_produit
-			FROM 
-			produit 
-			WHERE 
-			designation= ?";
-
-			$this->_setSql($sql);
-			$des=$this->designation;
-			$result = $this->getRow(array($des));
-			//var_dump($result);
-			if (empty($result))
-			{
-				return false;
-			}
-//			var_dump($result);
-			return intval($result['id_produit']);
-		}
-
-		public function getAttribut($id,$attribut){
-
-			$sql = "SELECT 
-			`$attribut` 
-			FROM 
-			`produit` 
-			WHERE 
-			id_produit = ?";
-
-			$this->_setSql($sql);
-			$result = $this->getRow(array($id));
-
-			if (empty($result))
-			{
-				return false;
-			}
-
-			return $result;
-
+			$arr = array(); 
+			$arr[0]=intval($result['id_produit']);
+			$arr[1]=$result['designation'];
+			$arr[2]=$result['descriptif'];
+			$arr[3]=intval($result['quantite']);
+			$arr[4]=floatval($result['prix']);
+			$arr[5]=$result['photo'];
+			$arr[6]=boolval($result['enVente']);
+			return $arr;
+			
 		}
 		
-		public function update($id, $attribut, $newValue){  
-		//modifier le produit dans la base
-		//verification?
-			$sql= "UPDATE 
-						`produit`
-				  SET 
-				  		`$attribut`='$newValue' 
-				  WHERE 
-				  		`id_produit`=?";
-
+		public function update(){  
+			$sql="call update_produit(?, ?, ?, ?, ?, ?, ?)";
+			$data = array(
+				$this->id_produit,
+				$this->designation,
+				$this->descriptif,
+				$this->quantite,
+				$this->prix,
+				$this->photo,
+				$this->enVente
+				);
+			//var_dump($data);
 			$this->_setSql($sql);
-			$this->updateM(array($id));
+			$this->updateM($data);
 		}
-/*
+
+		public function update_prix($newPrice){
+			$sql="call update_produit_prix(?,?)";
+			$data = array(
+				$this->id_produit,
+				$newPrice
+				);
+			$this->_setSql($sql);
+			$this->updateM($data);
+		}
+
 		public function delete($id){
-		//supprimer le produit de la base
-			$sql= "DELETE FROM
-						`produit`
-				
-				  WHERE 
-				  		`designation`=?";
+			$sql= "call delete_produit(?)";
 
 			$this->_setSql($sql);
-			$this->deleteM(array($id));
+			$this->deleteM(array($this->id_produit));
 		} 
-*/
+
                   
                   /* *  *  *  *  *  *  * *  *  *  *  *  *  * Getteurs pour les  attributs * * *  *  *  *  *  * * *  *  *  *  *  */
+
+		public function getIdProduit()
+		{
+			return $this->id_produit;
+		}
 
 		public function getDesignation()
 		{

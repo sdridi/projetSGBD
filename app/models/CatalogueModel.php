@@ -114,21 +114,25 @@
 		public function getProduitsCatalogue(){
 
 			$sql="SELECT 
-			*
+			id_produit
 			FROM 
 				catalogue NATURAL JOIN reference NATURAL JOIN produit 
 			where 
 			id_catalogue= ?";
 
 			$this->_setSql($sql);
-			$result = $this->getRow(array($this->idCatalogue));
+			$result = $this->getAll(array($this->idCatalogue));
 			//var_dump($result);
 			if (empty($result))
 			{
 				return false;
 			}
 
-			return $result;
+			$arr = array(); 
+			for ($i=0; $i < count($result); $i++) { 
+					$arr[$i]=intval($result[$i]['id_produit']);
+			}	
+			return $arr;
 		}
 
 
