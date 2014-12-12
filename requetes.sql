@@ -30,6 +30,7 @@ create procedure add_produit (IN desi varchar(64),
 			      IN EV boolean)
 begin
 	insert into produit(designation, descriptif, quantite, prix, photo, enVente) values (desi, descri, qte, prx, pht, EV);
+	select last_insert_id();
 end $$
 
 /* Met tout le produit à jour */
