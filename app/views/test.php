@@ -8,19 +8,27 @@ require_once"../models/CatalogueModel.php";
 
 
 $monCatalogue= new CatalogueModel();
-$monProduit= new ProduitModel();
+$monProduit= new ProduitModel(116);
 
-$tabProd=$monProduit->getProduitRestant();
-$monCatalogue->setIdCatalogue(22);
+
+//$monProduit->setIdProduit(116);
+$monProduit->setDescriptif("bleu");
 $tabCat=$monCatalogue->getProduitsCatalogue();
-var_dump($tabCat);
 
-/*
+$monProduit->update();
+$tabProd=$monProduit->getDetailsProduit();
+//$monProduit->setIdProduit('');	
+
+//print_r($tabCat);
+var_dump($tabProd);
+
+
+
 //$monCatalogue->setNom('divsders');
 //$monCatalogue->add();
 //$monProduit->delete('calculatrice');
-*/
-$monProduit->setDesignation('ordinateurPortble');
+
+$monProduit->setDesignation('ordinateusdrPortble');
 $monProduit->setDescriptif('vert');
 $monProduit->setQuantite('456');	
 $monProduit->setPrix('145');

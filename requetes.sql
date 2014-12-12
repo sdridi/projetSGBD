@@ -17,6 +17,11 @@ begin
 	select enVente from produit where id_produit = ref;
 end $$
 
+create procedure search_produit(IN desi varchar(64))
+begin
+	SELECT id_produit from produit where designation like concat('%', desi, '%');
+end $$
+
 create procedure add_produit (IN desi varchar(64),
        		 	      IN descri text,
 			      IN qte int unsigned, 
@@ -25,6 +30,7 @@ create procedure add_produit (IN desi varchar(64),
 			      IN EV boolean)
 begin
 	insert into produit(designation, descriptif, quantite, prix, photo, enVente) values (desi, descri, qte, prx, pht, EV);
+	select last_insert_id();
 end $$
 
 /* Met tout le produit à jour */
@@ -126,6 +132,12 @@ end $$
 create procedure get_ville (IN ref int)
 begin
 	select * from ville where id_ville = ref;
+end $$
+
+create procedure get_id_ville (IN nom_ville varchar(64), 
+       		 	       IN CP_ville int)
+begin
+	select id_ville from ville where nom = nom_ville and CP = CP_ville;
 end $$
 
 create procedure add_ville (IN nom_ville varchar(64),
