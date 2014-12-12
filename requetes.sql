@@ -128,6 +128,12 @@ begin
 	select * from ville where id_ville = ref;
 end $$
 
+create procedure get_id_ville (IN nom_ville varchar(64), 
+       		 	       IN CP_ville int)
+begin
+	select id_ville from ville where nom = nom_ville and CP = CP_ville;
+end $$
+
 create procedure add_ville (IN nom_ville varchar(64),
        		 	    IN CP_ville int unsigned)
 begin
