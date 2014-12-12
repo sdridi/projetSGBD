@@ -30,22 +30,32 @@
 			$this->nomCatalogue = $nomCatalogue;
 		}
 
-		public function setDateMAJ()
+		public function setDateMAJ($dateMAJ)
 		{
-			$this->dateMAJ = date("d-m-Y");
+			$this->dateMAJ = $dateMAJ;
+		}
+
+
+		public function getIdCatalogue()
+		{
+			return $this->idCatalogue;
+		}
+
+		public function getNom($nomCatalogue)
+		{
+			return $this->nomCatalogue;
+		}
+
+		public function getDateMAJ()
+		{
+			return $this->dateMAJ;
 		}
 
 		public function add(){	
-			$sql = "INSERT INTO `catalogue` 
-				(nom, dateMAJ)
-				VALUES 
-			(?, ?)";
+			$sql = "call create_catalogue(?)";
 
 			$this->setDateMAJ();
-			$data = array(
-				$this->nomCatalogue,
-				$this->dateMAJ
-				);
+			$data = array($this->nomCatalogue);
 
 			$sth = $this->_db->prepare($sql);
 			$sth->execute($data);
@@ -56,10 +66,7 @@
 		public function addProduitToCatalogue($id_produit){
 			$this->idCatalogue= $this->getIdCatalogueByName();
 	
-			$sql = "INSERT INTO reference 
-			(`id_catalogue`, `id_produit`)
-			VALUES 
-			(?, ?)";
+			$sql = "call add_to_catalogue(?, ?)";
 			
 			$data = array(
 				$this->idCatalogue,
@@ -71,24 +78,21 @@
 			
 		} 
 		
-		public function getIdCatalogueByName(){
+		public function removeFromCatalogue($id_produit){
 
-			$sql="SELECT 
-			`id_catalogue` 
-			FROM 
-			`catalogue` 
-			WHERE 
-			`nom`= ?";
+			$sql="call delete_from_catalogue(?, ?)";
 
 			$this->_setSql($sql);
 			$result = $this->getRow(array($this->nomCatalogue));
 			//var_dump($result);
-			if (empty($result))
-			{
-				return false;
-			}
+			$data = array(
+				$this->idCatalogue,
+				$id_produit
+				);
+
+			$sth = $this->_db->prepare($sql);
+			$sth->execute($data);
 			
-			return intval($result['id_catalogue']);
 		}
 
 		public function getCatalogueById(){

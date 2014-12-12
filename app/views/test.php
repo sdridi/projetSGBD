@@ -3,7 +3,7 @@
 
 <?php 
 require_once"../models/ProduitModel.php";
-//require_once"../models/CatalogueModel.php";
+require_once"../models/CatalogueModel.php";
 
 
 

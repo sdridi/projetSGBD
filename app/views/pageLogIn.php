@@ -38,7 +38,7 @@
         <div class="row">
             <?php include("menu.php"); ?>
         <center>
-        <form method="post" action="traitement.php">
+        <form method="post" action="index.php?p=ControllerMember&action=testLogIn">
             <p>
                  <br />
                 <label>Username</label> : <input type="text" name="username" required/>
@@ -47,7 +47,7 @@
                 <br />
                 <input type="submit" value="Log In" />
                 Not a member ?
-                    <a href="pageSignUp.php">Sign Up</a>
+                    <a href="index.php?p=ControllerMember&action=signUp">Sign Up</a>
             </p>
         </form>
 

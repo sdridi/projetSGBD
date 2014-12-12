@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Sign up</title>
+    <title>Admin</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
@@ -40,28 +40,50 @@
         
 <div class="col-md-9">
                 
-        <form method="post" action="../views/index.php?p=ControllerMember&action=addProcess">
+        <form method="post" action="../views/index.php?p=ControllerProduit&action=add">
             <p>
+			Add New Product
                  <br />
-                <label>First name</label> : <input type="text" name="firstname" required/>
+                <label>Designation</label> : <input type="text" name="designation" required/>
                 <br />
-                <label>Last name</label> : <input type="text" name="lastname" required/>
+                <label>Descriptif</label> : <input type="text" name="Descriptif" />
                 <br />
-                <label>Adress</label> : <input type="text" name="adress" required/>
+                <label>Photo</label> : <input type="text" name="photo" />
                 <br />
-                <label>City</label> : <input type="text" name="city" required/>
+                <label>Quantité</label> : <input type="number" name="quantite" required/>
                 <br />
-                <label>Postal code</label> : <input type="text" name="pcode" required/>
+                <label>Prix</label> : <input type="number" name="prix" required/>
                 <br />
-                <label>Email</label> : <input type="email" name="email" required/>
+                <label>EnVente</label> : <input type="checkBox" name="enVente" />
                 <br />
-                <label>Tel</label> : <input type="number" name="tel" required/>
                 <br />
-                <label>Password</label> : <input type="password" name="pass" required/>
+                <label>Catalogue</label> : <select   name="catalogue" />
+						
+							<?php include("selectCata.php"); ?>
+							</select>
+                <br />                
+                <input type="submit" value="Add" />
+            </p>
+        </form>
+
+		
+		<form method="post" action="../views/index.php?p=ControllerProduit&action=searchAdmin">
+            <p>
+			Search Product
+                 <br />
+                <label>Designation</label> : <input type="text" name="designation" required/>
                 <br />
-                <label>RepeatPassword</label> : <input type="password" name="repass" required/>
+                <input type="submit" value="Search" />
+            </p>
+        </form>
+		
+		<form method="post" action="../views/index.php?p=ControllerProduit&action=addCata">
+            <p>
+			Add Catalogue
+                 <br />
+                <label>Designation</label> : <input type="text" name="designation" required/>
                 <br />
-                <input type="submit" value="Sign Up" />
+                <input type="submit" value="Add" />
             </p>
         </form>
     </div>      
