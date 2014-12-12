@@ -17,6 +17,11 @@ begin
 	select enVente from produit where id_produit = ref;
 end $$
 
+create procedure search_produit(IN desi varchar(64))
+begin
+	SELECT id_produit from produit where designation like concat('%', desi, '%');
+end $$
+
 create procedure add_produit (IN desi varchar(64),
        		 	      IN descri text,
 			      IN qte int unsigned, 

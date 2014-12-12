@@ -38,7 +38,7 @@ insert into commande (dateValidation, dateLivraison, adrLivraison, fraisDePort, 
 
 insert into contenir (id_commande, id_produit, quantite, PUCommande)
        	    values (1, 1, 1, 25),
-	    	   (1, 3, 200, 1.5)
+	    	   (1, 3, 200, 1.5),
 		   (1, 2, 1, 659), 
 		   (2, 3, 500, 1.5), 
 		   (3, 1, 1, 20);
@@ -46,3 +46,18 @@ insert into contenir (id_commande, id_produit, quantite, PUCommande)
 insert into avis (id_membre, id_produit, note, commentaire, dateAvis)
        	    values (1, 2, 5, 'Très bon produit', 2014-12-13), 
 	    	   (3, 1, 3, null, 2014-12-07);
+
+call create_promo_produit (2014-11-01, 2014-11-15, 50, null, 1, 2);
+call create_promo_produit (2014-11-07, 2014-11-14, 2, 5, 2, 3);
+
+call create_promo_catalogue (2014-11-01, 2014-11-15, 10, null, 1, 1);
+call create_promo_catalogue (2014-12-01, 2014-12-31, 50, 150, 1, 2);
+
+call create_bon_reduction (2014-11-11, 2015-11-11, 5, null, 1);
+call create_bon_reduction (2014-11-05, 2015-11-05, 50, null, 1);
+update bon_reduction set id_commande = 1 where id_bon_reduction = 1;
+
+insert into admin (username, droits, mdp, mail)
+       	    values ('Arnaud', 1, 'safepassword', 'arivero@enseirb-matmeca.fr'), 
+       	    	   ('Sami', 1, '123456789', 'sdridi@enseirb-matmeca.fr'),
+       	    	   ('Oumar', 1, '7686', 'oulo@enseirb-matmeca.fr');
